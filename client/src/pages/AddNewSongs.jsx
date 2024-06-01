@@ -1,7 +1,21 @@
-import { Box, Text, Button, Input, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiCloudUpload } from "react-icons/bi";
 import { client } from "../api/index";
+import {
+    Box,
+    Text,
+    Button,
+    Input,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalCloseButton,
+    FormControl,
+    FormLabel,
+    Flex,
+} from "@chakra-ui/react";
 
 const AddNewSongs = () => {
     const [selectedMusic, setSelectedMusic] = useState(null);
@@ -10,99 +24,117 @@ const AddNewSongs = () => {
     const [artistName, setArtistName] = useState("");
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [fileName, setFileName] = useState("");
 
     function handleMusicChange(ev) {
         setSelectedMusic(ev.target.files[0]);
+        setFileName(ev.target.files[0].name);
     }
 
     function handleImageLinkChange(ev) {
         setCoverImage(ev.target.value);
     }
+
     const uploadMusic = async () => {
         setIsLoading(true);
         const formData = new FormData();
-        formData.append('file', selectedMusic);
-        formData.append('title', title);
-        formData.append('artistes', artistName);
-        formData.append('coverImage', coverImage);
+        formData.append("file", selectedMusic);
+        formData.append("title", title);
+        formData.append("artistes", artistName);
+        formData.append("coverImage", coverImage);
 
-        await client
-            .post("/songs/uploadSongs", formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            }).then(response => {
-                setUploadSuccess(true);
-                console.log('File uploaded successfully:', response.data);
-            }).catch(error => {
-                console.error('Error uploading file:', error);
-            }).finally(() => {
-                setIsLoading(false);
+        try {
+            const response = await client.post("/songs/uploadSongs", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
-    }
+            setUploadSuccess(true);
+            console.log("File uploaded successfully:", response.data);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const onClose = () => setUploadSuccess(false);
 
     return (
-        <Box m="auto" mt={20} mb={20} p={8}
-            maxW="500px" borderWidth="1px" borderRadius="lg"
-            bg="zinc.800"
-            minH="100vh"
-        >
-            <Text>upload Music</Text>
-            <Input
-                type="file"
-                name="file"
-                onChange={handleMusicChange}
-                variant="outline"
-                borderColor="teal"
-                p="20px"
-                mb={4}
-            />
-            <Text>Music Title</Text>
-            <Input
-                placeholder="Music Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                variant="outline"
-                borderColor="teal"
-                p="20px"
-                mb={4}
-            />
-            <Text>Artist Name</Text>
-            <Input
-                placeholder="Artist Name"
-                value={artistName}
-                onChange={(e) => setArtistName(e.target.value)}
-                variant="outline"
-                borderColor="teal"
-                p="20px"
-                mb={4}
-            />
-            <Text>Cover Image Link</Text>
-            <Input
-                placeholder="Cover Image Link"
-                value={coverImage}
-                onChange={handleImageLinkChange}
-                variant="outline"
-                borderColor="teal"
-                p="20px"
-                mb={4}
-            />
+        <Box p={8} maxW="500px" mx="auto" mt={20} bg="black" borderRadius="md">
+            <Text fontSize="2xl" fontWeight="bold" mb={6} textAlign="center">
+                Upload New Song
+            </Text>
+            <FormControl mb={4}>
+                <Flex align="center" >
+                    <Input
+                        type="file"
+                        id="file"
+                        h={200} w={400}
+                        onChange={handleMusicChange}
+                        display="none"
 
+                    />
+                    <label htmlFor="file">
+                        <Button
+
+                            as="span"
+                            colorScheme="blue"
+                            variant="outline"
+                            borderRadius="md"
+                            p={2}
+                        >
+                            <BiCloudUpload style={{ fontSize: "4rem" }} />
+                        </Button>
+                    </label>
+                </Flex><br />
+                <span style={{ overflow: 'hidden', }}>
+                    {fileName}
+                </span>
+
+            </FormControl>
+
+            <FormControl mb={4}>
+                <FormLabel htmlFor="title">Title</FormLabel>
+                <Input
+                    id="title"
+                    placeholder="Enter title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+            </FormControl>
+            <FormControl mb={4}>
+                <FormLabel htmlFor="artistName">Artist Name</FormLabel>
+                <Input
+                    id="artistName"
+                    placeholder="Enter artist name"
+                    value={artistName}
+                    onChange={(e) => setArtistName(e.target.value)}
+                />
+            </FormControl>
+            <FormControl mb={4}>
+                <FormLabel htmlFor="coverImage">Cover Image Link</FormLabel>
+                <Input
+                    id="coverImage"
+                    placeholder="Paste cover image link"
+                    value={coverImage}
+                    onChange={handleImageLinkChange}
+                />
+            </FormControl>
             <Button
-                onClick={uploadMusic}
+                isLoading={isLoading}
+                loadingText="Uploading..."
                 bg="accent.main"
-                variant="outline"
-                w="100%"
-                _hover={{ bg: "accent.transparent" }}
+                size="lg"
+                leftIcon={<BiCloudUpload />}
+                onClick={uploadMusic}
+                mb={4}
+                width="100%"
             >
-                <BiCloudUpload size={50} />
-                {isLoading ? "Uploading..." : "Upload Music"}
+                Upload Music
             </Button>
-
             <Modal isOpen={uploadSuccess} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent ml={200} bgColor="#F56565" color="white">
-                    <ModalHeader>Upload Success!</ModalHeader>
+                <ModalContent bg="accent.main" color="white">
+                    <ModalHeader textAlign="center">Upload Success!</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         Your music has been uploaded successfully.
@@ -111,6 +143,6 @@ const AddNewSongs = () => {
             </Modal>
         </Box>
     );
-}
+};
 
 export default AddNewSongs;
