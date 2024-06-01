@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-console.log("MONGO_CONNECTION_STRING:", process.env.MONGO_CONNECTION_STRING);
 
 export const connectDb = async () => {
 	try {

@@ -102,6 +102,7 @@ const CreatePlaylistPage = () => {
 				});
 				navigate("/home");
 				dispatch(
+					// eslint-disable-next-line no-unsafe-optional-chaining
 					setUser({ ...user, playlists: [...user?.playlists, res.data?._id] })
 				);
 			})

@@ -61,7 +61,7 @@ const SongCard = ({ song }) => {
 	};
 
 	const isCurrentTrack = currentTrack?._id === song?._id;
-	const isFavorite = user?.favorites.includes(song._id);
+	const isFavorite = user && user.favorites && user.favorites.includes(song._id);
 
 	return (
 		<Box

@@ -230,7 +230,7 @@ const MusicPlayer = () => {
 						color="accent.main"
 						onClick={handleLike}
 					>
-						{user?.favorites.includes(currentTrack._id) ? (
+						{user && user.favorites && user.favorites.includes(currentTrack?._id) ? (
 							<AiFillHeart color="inherit" />
 						) : (
 							<AiOutlineHeart color="#ddd" />

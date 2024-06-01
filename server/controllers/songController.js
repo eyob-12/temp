@@ -74,10 +74,10 @@ const likeSong = async (req, res) => {
 		const user = await User.findById(userId);
 
 		if (!user) {
-			return res.json(404).json({ message: "User not found!" });
+			return res.status(404).json({ message: "User not found!" });
 		}
 		if (!song) {
-			return res.json(404).json({ message: "Song not found!" });
+			return res.status(404).json({ message: "Song not found!" });
 		}
 
 		const isLiked = song.likes.get(userId);

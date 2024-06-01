@@ -20,7 +20,7 @@ const getPlaylists = async (req, res) => {
 //@access private
 const createPlaylist = async (req, res) => {
 	const { id, username } = req.user;
-	const { title, description, isPrivate, songIds } = req.body;
+	const { title, description, isPrivate, songIds, } = req.body;
 	const user = await User.findById(id);
 
 	if (!title || !songIds) {
