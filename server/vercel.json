@@ -9,6 +9,6 @@
   "routes": [
     { "src": "/uploads/(.*)", "dest": "/uploads/$1" },
     { "handle": "filesystem" }, 
-    { "src": "/(.*)", "dest": "/" } 
+    { "src": "/(.*)", "dest": "/index.js" }
   ]
 }
