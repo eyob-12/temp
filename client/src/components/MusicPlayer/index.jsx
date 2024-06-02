@@ -39,7 +39,7 @@ const MusicPlayer = () => {
 	const [audioPlaying, setAudioPlaying] = useState(false);
 
 	// Update audioBaseUrl to point to backend route
-	const audioBaseUrl = 'http://localhost:4000/api/songs/';
+	const audioBaseUrl = 'https://abyssiniasounds.vercel.app/api/';
 
 	useEffect(() => {
 		if (isPlaying) {
